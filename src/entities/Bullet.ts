@@ -33,7 +33,6 @@ class Bullet extends GameEntity {
       this._position.y,
       this._position.z
     );
-    console.log("Bala creada");
 
     //creamos los metodos de colision
     this._collider = new Box3()

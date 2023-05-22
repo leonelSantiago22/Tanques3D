@@ -87,12 +87,14 @@ class EnemyTank extends GameEntity {
     window.removeEventListener("keyup", this.handleKeyUp);
   };
   private shoot = async () => {
+    console.log(" Se creo el disparo");
+
     const offset = new Vector3(
       Math.sin(this._rotation) * 0.55,
       -Math.cos(this._rotation) * 0.75,
       0.5
     );
-    const shootingPosition = this._mesh.position.clone().add(offset);
+    const shootingPosition = this._mesh.position.clone().add(offset); //esta es el problema, se guarda una posicion de disparo lo que no debe pasar
     const bullet = new Bullet(shootingPosition, this._rotation);
     await bullet.load();
 
@@ -161,11 +163,13 @@ class EnemyTank extends GameEntity {
       this._shouldDispose = true; //esta variable es lo que hace que desaprezca, al no desaparecer el problema no se soluciona desde el tanque enemigo
       this.AudioPlay.explosionSound();
       // mandamos a llamar la explosion del tanque
-      this.clear(); //intento de borrar el doble canon
+      this.clear(); //in9tento de borrar el doble canon
+      this.activate_flag();
       const explosion = new ExplosionEffect(this._mesh.position, 2);
       explosion.load().then(() => {
         GameScene.instance.addToScene(explosion);
       });
+
       //llamamos a la instancia que reinicia el juego en caso de que pierda
       GameScene.instance.resetGame("Rojo");
     }

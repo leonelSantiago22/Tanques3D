@@ -22,9 +22,11 @@ class GameScene {
     return this._instance;
   }
   private _width: number;
+  private level = 0;
   private _height: number;
   private _renderer: WebGLRenderer;
   private _camera: PerspectiveCamera;
+  private projection = 55;
 
   // three js scene
   private readonly _scene = new Scene();
@@ -35,7 +37,7 @@ class GameScene {
   private _clock: Clock = new Clock();
 
   // map size
-  private _mapSize = 12;
+  private _mapSize = 15;
 
   // expose the camera
   public get camera() {
@@ -51,8 +53,8 @@ class GameScene {
   }
 
   public resetGame = async (winner: any) => {
+    this.addLevel(); //aumentamos el nivel del juego
     console.log(GameEntity);
-
     await this.delay(2000);
     Swal.fire({
       position: "center",
@@ -75,7 +77,7 @@ class GameScene {
     });
 
     const aspectRatio = this._width / this._height;
-    this._camera = new PerspectiveCamera(45, aspectRatio, 0.1, 1000);
+    this._camera = new PerspectiveCamera(80, aspectRatio, 0.1, 2000);
     this.createAllGame();
   }
 
@@ -96,9 +98,15 @@ class GameScene {
     }
     targetElement.appendChild(this._renderer.domElement);
     // setup camera
+
     const aspectRatio = this._width / this._height;
-    this._camera = new PerspectiveCamera(45, aspectRatio, 0.1, 1000);
-    this._camera.position.set(4, 5.2, 15);
+    this._camera = new PerspectiveCamera(
+      this.projection,
+      aspectRatio,
+      0.1,
+      1000
+    );
+    this._camera.position.set(6, 7.2, 15);
 
     window.addEventListener("resize", this.resize, false);
 
@@ -107,10 +115,10 @@ class GameScene {
     this._gameEntities.push(gameMap);
 
     //agregamos el tanque verde
-    const playerTank = new PlayerTank(new Vector3(7, 7, 0));
+    const playerTank = new PlayerTank(new Vector3(12, 12, 0));
     this._gameEntities.push(playerTank);
 
-    const enemyTank = new EnemyTank(new Vector3(3, 3, 0));
+    const enemyTank = new EnemyTank(new Vector3(2, 2, 0));
     this._gameEntities.push(enemyTank);
 
     // Controles
@@ -121,11 +129,25 @@ class GameScene {
   };
   private createWalls = () => {
     const edge = this._mapSize - 1;
+    const protection = 3;
 
     this._gameEntities.push(new Wall(new Vector3(0, 0, 0)));
     this._gameEntities.push(new Wall(new Vector3(edge, 0, 0)));
     this._gameEntities.push(new Wall(new Vector3(edge, edge, 0)));
     this._gameEntities.push(new Wall(new Vector3(0, edge, 0)));
+    if (this.level >= 1) {
+      for (let i = 3; i < 6; i++) {
+        this._gameEntities.push(new Wall(new Vector3(protection, i, 0)));
+
+        this._gameEntities.push(new Wall(new Vector3(i, protection, 0)));
+        this._gameEntities.push(
+          new Wall(new Vector3(edge - protection, i + 6, 0))
+        );
+        this._gameEntities.push(
+          new Wall(new Vector3(i + 6, edge - protection, 0))
+        );
+      }
+    }
     for (let i = 1; i < edge; i++) {
       this._gameEntities.push(new Wall(new Vector3(i, 0, 0)));
       this._gameEntities.push(new Wall(new Vector3(0, i, 0)));
@@ -153,6 +175,10 @@ class GameScene {
     const light = new HemisphereLight(0xffffbb, 0x080820, 1);
     this._scene.add(light);
   };
+  public addLevel() {
+    this.level = this.level + 1;
+    console.log(this.level);
+  }
   public reset = async () => {
     // Limpiar la escena
     this._scene.clear();
@@ -160,15 +186,18 @@ class GameScene {
 
     // Borrar la matriz de entidades de juego
     this._gameEntities = [];
+    //this._mapSize = 20;
 
     // Crear las entidades de juego y los muros
     const gameMap = new GameMap(new Vector3(0, 0, 0), this._mapSize);
     this._gameEntities.push(gameMap);
 
-    const playerTank = new PlayerTank(new Vector3(7, 7, 0));
+    const playerTank = new PlayerTank(new Vector3(12, 12, 0));
+
     this._gameEntities.push(playerTank);
 
-    const enemyTank = new EnemyTank(new Vector3(3, 3, 0));
+    const enemyTank = new EnemyTank(new Vector3(2, 2, 0));
+
     this._gameEntities.push(enemyTank);
 
     this.createWalls();

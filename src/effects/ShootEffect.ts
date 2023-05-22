@@ -14,6 +14,8 @@ class ShootEffect extends GameEntity {
   }
 
   public load = async () => {
+    console.log(" La bala fue creada");
+
     const particleGeometry = new DodecahedronGeometry(this._size, 0);
 
     const fireMaterial = new MeshPhongMaterial({ color: 0xfafafa });
@@ -70,6 +72,8 @@ class ShootEffect extends GameEntity {
   };
 
   public dispose = () => {
+    console.log(" la bala fue destruida");
+
     this._fire.children.forEach((element) => {
       (element as Mesh).geometry.dispose();
       ((element as Mesh).material as MeshPhongMaterial).dispose();

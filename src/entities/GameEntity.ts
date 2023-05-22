@@ -6,6 +6,7 @@ type EntityType = "general" | "player" | "bullet" | "enemy";
 import GameScene from "../scene/GameScene";
 
 abstract class GameEntity {
+  public reset_flag: number;
   protected _position: Vector3;
   protected _mesh: Mesh = new Mesh();
   public get mesh() {
@@ -18,6 +19,13 @@ abstract class GameEntity {
   }
 
   protected _entityType: EntityType;
+  public activate_flag() {
+    this.reset_flag = 1;
+  }
+  public returnValueFlag() {
+    return this.reset_flag;
+  }
+
   public get entityType() {
     return this._entityType;
   }
@@ -28,6 +36,9 @@ abstract class GameEntity {
   }
 
   constructor(position: Vector3, entityType: EntityType = "general") {
+    this.reset_flag = 0;
+    //console.log("Se mando la posicion");
+
     this._position = position;
     this._mesh.position.set(
       this._position.x,

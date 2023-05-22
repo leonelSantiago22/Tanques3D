@@ -179,7 +179,8 @@ class PlayerTank extends GameEntity {
       explosion.load().then(() => {
         GameScene.instance.addToScene(explosion);
       });
-      this.clear();
+      this.clear(); //como hago para llamar esta funcion
+      this.reset_flag = 1;
       //console.log("Tanque eliminado");
       //console.log("El tanque rojo");
       GameScene.instance.resetGame("Verde");
@@ -201,6 +202,14 @@ class PlayerTank extends GameEntity {
     });
   };
   public update = (deltaT: number) => {
+    if (this.returnValueFlag() == 1) {
+      console.log(this.returnValueFlag());
+
+      console.log("Se reseteo la bandera");
+
+      this.clear();
+    }
+
     let computedRotation = this._rotation;
     let computedMovement = new Vector3();
     const moveSpeed = 2; //velocidad de movimiento
