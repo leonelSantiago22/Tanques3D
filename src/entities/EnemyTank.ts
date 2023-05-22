@@ -163,7 +163,7 @@ class EnemyTank extends GameEntity {
       this._shouldDispose = true; //esta variable es lo que hace que desaprezca, al no desaparecer el problema no se soluciona desde el tanque enemigo
       this.AudioPlay.explosionSound();
       // mandamos a llamar la explosion del tanque
-      this.clear(); //in9tento de borrar el doble canon
+      //this.clear(); //in9tento de borrar el doble canon
       this.activate_flag();
       const explosion = new ExplosionEffect(this._mesh.position, 2);
       explosion.load().then(() => {

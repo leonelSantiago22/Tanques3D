@@ -62,11 +62,11 @@ class PlayerTank extends GameEntity {
         break;
     }
   };
-  public clear = () => {
+  public clear() {
     // Eliminar los listeners de eventos de teclado
     window.removeEventListener("keydown", this.handleKeyDown);
     window.removeEventListener("keyup", this.handleKeyUp);
-  };
+  }
   private handleKeyUp = async (e: KeyboardEvent) => {
     switch (e.key) {
       case "ArrowUp":
@@ -91,11 +91,12 @@ class PlayerTank extends GameEntity {
 
   private shoot = async () => {
     const offset = new Vector3(
-      Math.sin(this._rotation) * 0.55,
-      -Math.cos(this._rotation) * 0.75,
+      Math.sin(this._rotation) * 0.65,
+      -Math.cos(this._rotation) * 0.5,
       0.5
     );
     const shootingPosition = this._mesh.position.clone().add(offset);
+
     const bullet = new Bullet(shootingPosition, this._rotation);
     await bullet.load();
 
@@ -202,14 +203,6 @@ class PlayerTank extends GameEntity {
     });
   };
   public update = (deltaT: number) => {
-    if (this.returnValueFlag() == 1) {
-      console.log(this.returnValueFlag());
-
-      console.log("Se reseteo la bandera");
-
-      this.clear();
-    }
-
     let computedRotation = this._rotation;
     let computedMovement = new Vector3();
     const moveSpeed = 2; //velocidad de movimiento

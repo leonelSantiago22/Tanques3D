@@ -21,6 +21,8 @@ class GameScene {
   public static get instance() {
     return this._instance;
   }
+  private playerTank = new PlayerTank(new Vector3(12, 12, 0));
+  private enemyTank = new EnemyTank(new Vector3(2, 2, 0));
   private _width: number;
   private level = 0;
   private _height: number;
@@ -55,6 +57,8 @@ class GameScene {
   public resetGame = async (winner: any) => {
     this.addLevel(); //aumentamos el nivel del juego
     console.log(GameEntity);
+    this.playerTank.clear();
+    this.enemyTank.clear();
     await this.delay(2000);
     Swal.fire({
       position: "center",
@@ -115,11 +119,10 @@ class GameScene {
     this._gameEntities.push(gameMap);
 
     //agregamos el tanque verde
-    const playerTank = new PlayerTank(new Vector3(12, 12, 0));
-    this._gameEntities.push(playerTank);
 
-    const enemyTank = new EnemyTank(new Vector3(2, 2, 0));
-    this._gameEntities.push(enemyTank);
+    this._gameEntities.push(this.playerTank);
+
+    this._gameEntities.push(this.enemyTank);
 
     // Controles
     //const controls = new OrbitControls(this._camera, targetElement);

@@ -64,19 +64,29 @@ class Bullet extends GameEntity {
 
     if (colliders.length) {
       this._shouldDispose = true;
-
+      const explosion = new ExplosionEffect(this._mesh.position, 1);
+      explosion.load().then(() => {
+        GameScene.instance.addToScene(explosion);
+      });
       const enemies = colliders.filter((c) => c.entityType === "enemy");
+
       if (enemies.length) {
         (enemies[0] as EnemyTank).damage(25);
-
         // Reproduce el sonido cuando la bola colisiona con un enemigo
         this.AudioPlay.impactSount();
-      } else if (Wall.length) {
-        console.log("Choco con una pared");
       }
     }
   };
-
+  public checkCollisionWith(otherMesh: any) {
+    // librar al jugador de las colisiones
+    const colliders = GameScene.instance.gameEntities.filter(
+      (c) =>
+        c.collider &&
+        c !== this &&
+        c.entityType !== "player" &&
+        c.collider.intersectsSphere(this._collider as Sphere)
+    );
+  }
   public dispose = () => {
     (this._mesh.material as Material).dispose();
     this._mesh.geometry.dispose();
